@@ -14,36 +14,58 @@ const converter = typeof showdown !== 'undefined' ? new showdown.Converter({
     emoji: true
 }) : null;
 
-// Update institute-specific information
+// Add institute-specific information
 const instituteInfo = {
     courses: {
-        diplomaCourses: [
-            "Diploma in Journalism",
-            "Diploma in Accountancy",
-            "Diploma in Public Administration",
-            "Diploma in Secretarial Studies",
-            "Diploma in Business Management",
-            "Diploma in Computer Applications"
+        nationalCertificate: [
+            "Accounting and Finance",
+            "Business Administration",
+            "Records and Information Mgt",
+            "Hotel and Institutional Catering",
+            "Information & Computer Technology",
+            "National Certificate in Tourism",
+            "Nursery Teaching-ECD"
         ],
-        certificateCourses: [
-            "Basic Computer Applications",
-            "Professional Short Courses"
+        nationalDiploma: [
+            "National Diploma in Accountancy",
+            "Hotel & Institutional Catering",
+            "Business Administration",
+            "Secretarial & Office Administration",
+            "Records & Information Mgt",
+            "Information & Computer Technology"
+        ],
+        shortCourses: [
+            "Driving, Tourist guide",
+            "Language at basic level",
+            "NGO Management",
+            "Financial management",
+            "Public Admin & speaking",
+            "Records management",
+            "Soap and Shoe making"
+        ],
+        vocationalCourses: [
+            "Pottery and Ceramics",
+            "Tailoring and Garment cutting",
+            "Fashion Design and knitting",
+            "Hairdressing and Cosmetology",
+            "Cookery and handcrafts",
+            "Motor Vehicle mechanics",
+            "Electrical installation"
         ]
     },
-    radioPrograms: {
-        station: "Paradigm FM",
-        website: "radio.paradigmkagadi.org",
-        programs: [
-            "Morning News Brief",
-            "Community Hour",
-            "Educational Programs",
-            "Local Music & Culture"
-        ]
-    },
+    admissionRequirements: [
+        "Completed Primary Seven",
+        "Completed Senior Four",
+        "Completed Senior Six",
+        "Dropouts welcome"
+    ],
     contact: {
-        phones: ["+256(0) 772990845", "+256(0) 777348121"],
-        email: "info@paradigmkagadi.org",
-        location: "Kagadi-Kibaale Road, P.O Box 36, Kagadi Uganda"
+        phones: ["0702491818", "0792307623"],
+        location: "in Fortportal City, Opposite Kitumba Mosque"
+    },
+    registration: {
+        intake: "2025 April Intake",
+        status: "Registration is ongoing"
     }
 };
 
@@ -71,7 +93,7 @@ function addMessage(message, isUser = false, timestamp = null) {
     messageDiv.className = `message ${isUser ? 'user-message' : 'bot-message'}`;
     
     // Special handling for welcome message
-    if (!isUser && message.includes("Hello! I'm Creative Palms Institute AI assistant")) {
+    if (!isUser && message.includes("Hello! I'm Paradigm Institute & FM AI assistant")) {
         messageDiv.className += ' welcome-message';
         messageDiv.textContent = message;
     } else {
@@ -120,147 +142,99 @@ function showTypingIndicator() {
     return indicator;
 }
 
-// Update the welcome message with detailed lists
-const welcomeMessage = `<div class="title-header">WELCOME TO PARADIGM INSTITUTE & FM!</div>
-
-I'm your AI Assistant, here to help you learn about Paradigm Institute of Business and Media Studies and Paradigm FM.
-
-<div class="title-header">OUR PROGRAMS:</div>
-
-1. 📚 DIPLOMA PROGRAMS (3 Years):
-   • Diploma in Journalism & Media Studies
-   • Diploma in Accountancy
-   • Diploma in Public Administration
-   • Diploma in Secretarial Studies
-   • Diploma in Business Management
-   • Diploma in Computer Applications
-
-2. 📻 PARADIGM FM SERVICES:
-   • Live Radio Broadcasting (radio.paradigmkagadi.org)
-   • News and Current Affairs Programs
-   • Educational and Development Programs
-   • Community Outreach Programs
-   • Local Music and Culture Shows
-   • Public Announcements Service
-
-<div class="title-header">HOW CAN I HELP YOU?</div>
-
-1. 📋 Course Information
-   • Program Details
-   • Entry Requirements
-   • Course Duration
-   • Fee Structure
-
-2. 📝 Admissions
-   • Application Process
-   • Required Documents
-   • Registration Dates
-   • Scholarship Options
-
-3. 📻 Paradigm FM
-   • Listen Live
-   • Program Schedule
-   • Submit Announcements
-   • Advertising
-
-4. 📍 Contact Us
-   • Location: Kagadi-Kibaale Road
-   • Phone: +256(0) 772990845
-   • Email: info@paradigmkagadi.org
-
-Type a number (1-4) or ask any question about our programs!`;
-
-// Function to check if query is about the institute or FM
-function isParadigmQuery(query) {
-    const keywords = [
-        "paradigm", "institute", "course", "program", "certificate", 
-        "diploma", "admission", "register", "enroll", "radio",
-        "fm", "kagadi", "fees", "duration", "study"
+// Function to check if query is about the institute
+function isInstituteQuery(query) {
+    const instituteKeywords = [
+        "paradigm", "course", "program", "certificate", "diploma",
+        "admission", "register", "enroll", "intake", "location", "contact",
+        "kagadi", "requirements", "fees", "duration", "study", "radio", "fm",
+        "paradigm fm", "paradigm institute", "paradigmkagadi"
     ];
     
-    return keywords.some(keyword => 
+    return instituteKeywords.some(keyword => 
         query.toLowerCase().includes(keyword.toLowerCase())
     );
 }
 
+// Function to get current intake information
+function getCurrentIntakeInfo() {
+    const currentDate = new Date();
+    const currentMonth = currentDate.toLocaleString('default', { month: 'long' });
+    return `${currentMonth} Intake`;
+}
+
 // Function to handle institute-specific queries
-function handleParadigmQuery(query) {
+function handleInstituteQuery(query) {
     query = query.toLowerCase();
     
     // Location/Contact queries
     if (query.includes("location") || query.includes("where") || 
         query.includes("contact") || query.includes("phone")) {
-        return `You can find us at:
-${instituteInfo.contact.location}
-
-Contact us at:
-📞 ${instituteInfo.contact.phones.join(" or ")}
-📧 ${instituteInfo.contact.email}`;
+        return `You can find us in Fortportal City, Opposite Kitumba Mosque\n` +
+               `Contact us at: ${instituteInfo.contact.phones.join(" or ")}`;
     }
 
-    // Radio/FM queries
-    if (query.includes("radio") || query.includes("fm")) {
-        return `Paradigm FM - Your Community Voice!
-
-🎙️ Listen live at: ${instituteInfo.radioPrograms.website}
-
-Today's Programs:
-${instituteInfo.radioPrograms.programs.map(prog => "• " + prog).join("\n")}
-
-For program schedules or announcements, contact our studio.`;
+    // Intake/Registration queries
+    if (query.includes("intake") || query.includes("when") || 
+        query.includes("start") || query.includes("begin")) {
+        return `Registration is ongoing for the ${getCurrentIntakeInfo()}! Contact us to secure your place.`;
     }
 
     // Course related queries
     if (query.includes("course") || query.includes("program")) {
-        if (query.includes("diploma")) {
-            return "Our Diploma Programs (3 years):\n- " +
-                   instituteInfo.courses.diplomaCourses.join("\n- ");
-        }
         if (query.includes("certificate")) {
-            return "Our Certificate Programs:\n- " +
-                   instituteInfo.courses.certificateCourses.join("\n- ");
+            return "Our National Certificate Programs (2 years) include:\n" +
+                   instituteInfo.courses.nationalCertificate.join("\n- ");
         }
-        return `We offer various programs:
-
-1. Diploma Programs (3 years):
-${instituteInfo.courses.diplomaCourses.map(course => "   • " + course).join("\n")}
-
-2. Certificate Programs:
-${instituteInfo.courses.certificateCourses.map(course => "   • " + course).join("\n")}
-
-Which program would you like to know more about?`;
+        if (query.includes("diploma")) {
+            return "Our National Diploma Programs (2 years) include:\n" +
+                   instituteInfo.courses.nationalDiploma.join("\n- ");
+        }
+        if (query.includes("short") || query.includes("1 month")) {
+            return "Our Short Courses (1 month) include:\n" +
+                   instituteInfo.courses.shortCourses.join("\n- ");
+        }
+        if (query.includes("vocational")) {
+            return "Our Vocational Courses (6 months) include:\n" +
+                   instituteInfo.courses.vocationalCourses.join("\n- ");
+        }
+        return "We offer various programs:\n\n" +
+               "1. National Certificate Programs (2 years)\n" +
+               "2. National Diploma Programs (2 years)\n" +
+               "3. Short Courses (1 month)\n" +
+               "4. Vocational Courses (6 months)\n\n" +
+               "Which category would you like to know more about?";
     }
 
-    // Default response
-    return `Welcome to Paradigm Institute & FM! 
+    // Admission/Registration queries
+    if (query.includes("admission") || query.includes("register") || 
+        query.includes("enroll") || query.includes("intake")) {
+        return `${instituteInfo.registration.status} for ${instituteInfo.registration.intake}!\n\n` +
+               "Admission Requirements:\n- " +
+               instituteInfo.admissionRequirements.join("\n- ");
+    }
 
-We offer quality education and community radio services.
-How can I assist you today?
-
-1. Course Information
-2. Admission Details
-3. Paradigm FM
-4. Contact Information`;
+    return null; // Return null if query isn't specifically about the institute
 }
 
-// Update the API response handler
 async function callGeminiAPI(prompt) {
-    // First check if it's a Paradigm-related query
-    if (isParadigmQuery(prompt)) {
-        return handleParadigmQuery(prompt);
+    // First check if it's an institute-related query
+    const instituteResponse = handleInstituteQuery(prompt);
+    if (instituteResponse) {
+        return instituteResponse;
     }
 
-    // Identity questions
+    // If not institute-related, proceed with Gemini API call
     const identityKeywords = [
         "who made you", "who created you", "who developed you",
-        "what are you", "who are you", "what model are you"
+        "what are you", "who are you", "what model are you",
+        "what's your name", "what is your name", "when was you created"
     ];
     
     if (identityKeywords.some(keyword => prompt.toLowerCase().includes(keyword))) {
-        return "I'm the Paradigm Institute & FM AI assistant, here to help you learn about our educational programs and radio services!";
+        return "I'm Paradigm Institute & FM AI assistant. I was created by Lucky to help you!";
     }
 
-    // Continue with Gemini API call for general knowledge questions
     const response = await fetch(API_URL, {
         method: 'POST',
         headers: {
@@ -301,26 +275,57 @@ async function callGeminiAPI(prompt) {
 // PUBLIC KEY (Get from: Account > API Keys)
 // If wrong: Login to EmailJS > Click your name > API Keys
 (function() {
-    emailjs.init("YOUR_PUBLIC_KEY");
+    emailjs.init("OUWdr0kTs6aX5J2PW");
+    console.log("EmailJS initialized with public key"); // Verify initialization
 })();
 
 // Update the sendNotification function with troubleshooting comments
 async function sendNotification(userMessage) {
+    console.log("Starting email notification..."); // Debug point 1
     try {
+        // SERVICE ID (Get from: Email Services > Your Service > Service ID)
+        // If wrong: Login to EmailJS > Email Services > Click your service
+        const SERVICE_ID = "service_wgq1nd8";
+        
+        // TEMPLATE ID (Get from: Email Templates > Your Template > Template ID)
+        // If wrong: Login to EmailJS > Email Templates > Click your template
+        const TEMPLATE_ID = "template_rdijcqi";
+        
+        // Verify keys before sending
+        console.log("Using Service ID:", SERVICE_ID); // Debug point 2
+        console.log("Using Template ID:", TEMPLATE_ID); // Debug point 3
+
         const response = await emailjs.send(
-            "YOUR_SERVICE_ID",
-            "YOUR_TEMPLATE_ID",
+            SERVICE_ID,
+            TEMPLATE_ID,
             {
+                // These must match EXACTLY with your template variables
+                // To check: Go to EmailJS > Email Templates > Edit your template
                 to_name: "Admin",
                 from_name: "Website Visitor",
                 message: userMessage,
-                reply_to: "info@paradigmkagadi.org",
-                subject: "Paradigm Institute Inquiry"
+                timestamp: new Date().toLocaleString()
             }
         );
+
+        // Success logs
+        console.log("Email sent successfully!", response);
+        console.log("If you didn't receive the email:");
+        console.log("1. Check spam folder");
+        console.log("2. Verify email address in EmailJS service settings");
+        console.log("3. Confirm template variables match exactly");
+
         return response;
     } catch (error) {
-        console.error("Email notification error:", error);
+        // Error logs for troubleshooting
+        console.error("==== EmailJS Error ====");
+        console.error("Error type:", error.name);
+        console.error("Error message:", error.message);
+        console.error("Check if:");
+        console.error("1. Public Key is correct");
+        console.error("2. Service ID is correct");
+        console.error("3. Template ID is correct");
+        console.error("4. Template variables match");
         throw error;
     }
 }
@@ -406,5 +411,37 @@ window.addEventListener('load', () => {
         hour12: true 
     }).replace(/\s/g, '').toLowerCase();
     
+    const welcomeMessage = `<div class="title-header">WELCOME TO PARADIGM INSTITUTE & FM!</div>
+
+I'm your AI Assistant, dedicated to helping you explore opportunities at Paradigm Institute of Business and Media Studies and our community radio station - Paradigm FM 100.0.
+
+<div class="title-header">OUR PROGRAMS:</div>
+
+1. 📚 DIPLOMA PROGRAMS (3 Years):
+   • Diploma in Journalism & Media Studies
+   • Diploma in Accountancy
+   • Diploma in Public Administration
+   • Diploma in Secretarial Studies
+   • Diploma in Business Management
+   • Diploma in Computer Applications
+
+2. 📻 PARADIGM FM 100.0 PROGRAMS:
+   • Paradigm Connection (12:00 am - 5:00 am)
+   • Ekyererezi (5:00 am - 10:00 am)
+   • Entuyo Zange (10:00 am - 2:00 pm)
+   • Home Drive (2:00 pm - 6:00 pm)
+   • Evening Cruiz (6:00 pm - 9:00 pm)
+   • Good Night Flavour (9:00 pm - 12:00 am)
+
+<div class="title-header">HOW CAN I HELP YOU?</div>
+
+Ask me about:
+• Educational programs and courses
+• Student services and admission
+• Radio programs and services
+• Contact information and location
+
+Feel free to ask any question about our educational programs or radio services!`;
+
     addMessage(welcomeMessage, false, timestamp);
 });
