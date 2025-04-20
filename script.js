@@ -167,6 +167,20 @@ function getCurrentIntakeInfo() {
 function handleInstituteQuery(query) {
     query = query.toLowerCase();
     
+    // Radio service queries
+    if (query.includes("radio") || query.includes("fm") || query.includes("paradigm fm")) {
+        return `<div class="title-header">📻 PARADIGM FM 100.0 RADIO PROGRAMS</div>
+
+<ul>
+  <li><strong>Morning:</strong> Ekyererezi (5:00 am - 10:00 am)</li>
+  <li><strong>Afternoon:</strong> Entuyo Zange (10:00 am - 2:00 pm)</li>
+  <li><strong>Evening:</strong> Home Drive (2:00 pm - 6:00 pm)</li>
+  <li><strong>Night:</strong> Evening Cruiz (6:00 pm - 9:00 pm)</li>
+</ul>
+
+<p>Listen to us online at: <a href="https://radio.paradigmkagadi.org" target="_blank">radio.paradigmkagadi.org</a></p>`;
+    }
+    
     // Location/Contact queries
     if (query.includes("location") || query.includes("where") || 
         query.includes("contact") || query.includes("phone")) {
@@ -187,7 +201,7 @@ function handleInstituteQuery(query) {
                    instituteInfo.courses.nationalCertificate.join("\n- ");
         }
         if (query.includes("diploma")) {
-            return "Our National Diploma Programs (2 years) include:\n" +
+            return "Our National Diploma Programs (3 years) include:\n" +
                    instituteInfo.courses.nationalDiploma.join("\n- ");
         }
         if (query.includes("short") || query.includes("1 month")) {
@@ -200,7 +214,7 @@ function handleInstituteQuery(query) {
         }
         return "We offer various programs:\n\n" +
                "1. National Certificate Programs (2 years)\n" +
-               "2. National Diploma Programs (2 years)\n" +
+               "2. National Diploma Programs (3 years)\n" +
                "3. Short Courses (1 month)\n" +
                "4. Vocational Courses (6 months)\n\n" +
                "Which category would you like to know more about?";
@@ -413,35 +427,28 @@ window.addEventListener('load', () => {
     
     const welcomeMessage = `<div class="title-header">WELCOME TO PARADIGM INSTITUTE & FM!</div>
 
-I'm your AI Assistant, dedicated to helping you explore opportunities at Paradigm Institute of Business and Media Studies and our community radio station - Paradigm FM 100.0.
+I'm your AI Assistant for Paradigm Institute of Business and Media Studies and Paradigm FM 100.0.
 
 <div class="title-header">OUR PROGRAMS:</div>
 
-1. 📚 DIPLOMA PROGRAMS (3 Years):
-   • Diploma in Journalism & Media Studies
-   • Diploma in Accountancy
-   • Diploma in Public Administration
-   • Diploma in Secretarial Studies
-   • Diploma in Business Management
-   • Diploma in Computer Applications
+<ul>
+  <li>📚 DIPLOMA PROGRAMS (3 Years)</li>
+  <li>📝 CERTIFICATE PROGRAMS (2 Years)</li>
+  <li>⚡ SHORT COURSES (1 Month)</li>
+  <li>🛠️ VOCATIONAL PROGRAMS (6 Months)</li>
+</ul>
 
-2. 📻 PARADIGM FM 100.0 PROGRAMS:
-   • Paradigm Connection (12:00 am - 5:00 am)
-   • Ekyererezi (5:00 am - 10:00 am)
-   • Entuyo Zange (10:00 am - 2:00 pm)
-   • Home Drive (2:00 pm - 6:00 pm)
-   • Evening Cruiz (6:00 pm - 9:00 pm)
-   • Good Night Flavour (9:00 pm - 12:00 am)
+<div class="title-header">RADIO PROGRAMS:</div>
 
-<div class="title-header">HOW CAN I HELP YOU?</div>
+📻 PARADIGM FM 100.0
+<ul>
+  <li>Morning: Ekyererezi (5:00 am - 10:00 am)</li>
+  <li>Afternoon: Entuyo Zange (10:00 am - 2:00 pm)</li>
+  <li>Evening: Home Drive (2:00 pm - 6:00 pm)</li>
+  <li>Night: Evening Cruiz (6:00 pm - 9:00 pm)</li>
+</ul>
 
-Ask me about:
-• Educational programs and courses
-• Student services and admission
-• Radio programs and services
-• Contact information and location
-
-Feel free to ask any question about our educational programs or radio services!`;
+Ask me about our programs, admission, radio services, or contact information!`;
 
     addMessage(welcomeMessage, false, timestamp);
 });
